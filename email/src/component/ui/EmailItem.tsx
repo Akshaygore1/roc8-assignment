@@ -6,14 +6,24 @@ import { email } from "../../lib/types";
 interface EmailItemProps {
   email: email;
   onClick?: () => void;
+  active: boolean;
+  isEmailBody?: boolean;
 }
 
-const EmailItem: React.FC<EmailItemProps> = ({ email, onClick }) => {
+const EmailItem: React.FC<EmailItemProps> = ({
+  email,
+  onClick,
+  active,
+  isEmailBody,
+}) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     if (onClick) {
       onClick();
+      navigate(`/${email.id}`, {
+        state: { email },
+      });
     } else {
       navigate(`/${email.id}`, {
         state: { email },
@@ -23,7 +33,9 @@ const EmailItem: React.FC<EmailItemProps> = ({ email, onClick }) => {
 
   return (
     <div
-      className="bg-white rounded-lg border border-border p-4 flex items-start space-x-4 cursor-pointer"
+      className={`bg-white rounded-lg border  p-4 flex items-start space-x-4 cursor-pointer ${
+        active ? " border-accent" : "border-border"
+      }`}
       onClick={handleClick}
     >
       <div className="bg-accent text-white rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
@@ -43,7 +55,16 @@ const EmailItem: React.FC<EmailItemProps> = ({ email, onClick }) => {
           Subject:{" "}
           <span className="font-medium text-black">{email.subject}</span>
         </p>
-        <p className="text-sm text-text mt-1">{email.short_description}</p>
+        <p
+          className={`text-sm text-text mt-1 ${
+            isEmailBody
+              ? "max-w-96 overflow-hidden text-ellipsis whitespace-nowrap"
+              : ""
+          }`}
+        >
+          {email.short_description}
+        </p>
+
         <div className="flex justify-between items-center mt-2">
           <span className="text-xs text-gray-500">
             {dayjs(email.date).format("DD MMM YYYY hh:mm A")}

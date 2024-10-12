@@ -8,10 +8,12 @@ import { fetchEmails } from "../lib/dataFetcher";
 
 interface EmailListProps {
   filter: string | null;
+  isEmailBody: boolean;
 }
 
-function EmailList() {
+function EmailList({ isEmailBody }: { isEmailBody: boolean }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const { filter } = useOutletContext<EmailListProps>();
 
   const { data, isLoading } = useQuery<emailList, Error>({
@@ -36,12 +38,23 @@ function EmailList() {
     return true;
   });
 
+  const handleClick = (id: string) => {
+    console.log("first id", id);
+    setSelectedId(id);
+  };
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex flex-col gap-4">
         {filteredEmails.length ? (
           filteredEmails.map((email: email) => (
-            <EmailItem key={email.id} email={email} />
+            <EmailItem
+              key={email.id}
+              email={email}
+              onClick={() => handleClick(email.id)}
+              active={selectedId === email.id}
+              isEmailBody={isEmailBody}
+            />
           ))
         ) : (
           <p>No Emails</p>

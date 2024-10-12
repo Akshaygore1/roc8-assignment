@@ -4,9 +4,10 @@ type Props = {
   name: string;
   date: string;
   body: string;
+  emailLoading: boolean;
 };
 
-function EmailBody({ name, date, body }: Props) {
+function EmailBody({ name, date, body, emailLoading }: Props) {
   return (
     <div className="flex flex-col p-6 max-w-4xl mx-auto">
       <div className="flex items-center mb-4 justify-between">
@@ -27,10 +28,14 @@ function EmailBody({ name, date, body }: Props) {
       </div>
 
       <div className="p-6 rounded-lg">
-        <div
-          className="whitespace-pre-wrap"
-          dangerouslySetInnerHTML={{ __html: body }}
-        ></div>
+        {emailLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <div
+            className="whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: body }}
+          ></div>
+        )}
       </div>
     </div>
   );
