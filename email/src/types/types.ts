@@ -10,5 +10,5 @@ export type email = {
 };
 
 export type emailList = {
-  list: email[];
+  emails: email[] | [];
 };
